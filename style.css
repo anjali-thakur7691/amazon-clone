@@ -23,6 +23,8 @@ body {
 .nav-logo {
     height: 50px;
     width: 100px;
+    display: flex;
+    color: white;
 }
 
 .logo {
@@ -167,17 +169,18 @@ span {
     font-weight: 700;
     cursor: pointer;
 }
-
 /* Hero Section */
 .hero-section {
-    background-image: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1500&q=80');
+    background-image: url('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1500&q=80');
     background-size: cover;
-    height: 380px;
+    background-position: center;
+    height: 400px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    padding-bottom: 20px;
 }
-
+/* White Message Strip */
 .hero-msg {
     background-color: white;
     color: #0f1111;
@@ -186,8 +189,9 @@ span {
     align-items: center;
     justify-content: center;
     font-size: 0.85rem;
-    width: 80%;
-    margin-bottom: 25px;
+    width: 85%;
+    max-width: 1200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .hero-msg a {
@@ -200,39 +204,26 @@ span {
     text-decoration: underline;
     color: #c7511f;
 }
-
 /* Main Shop Section Grid Container */
+/* Shop Section Clean Spacing */
 .shop-section {
     display: flex;
+    justify-content: space-evenly;
+    background-color: #eaeded;
     flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 20px 20px;
-    max-width: 1500px;
-    margin: 0 auto;
+    margin-top: 20px; /* Overlapping hatane ke liye positive margin */
 }
 
-/* Uniform Individual Product Boxes (Strictly 4 per row) */
+/* Individual Product Boxes */
 .shop-section .box {
     height: 420px;
-    width: 23.5%;
+    width: 23%;
     background-color: white;
     padding: 20px 20px 15px 20px;
     margin-bottom: 20px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-}
-
-.box-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.box-content h2 {
-    font-size: 1rem;
-    color: #0f1111;
-    margin-bottom: 10px;
 }
 
 /* Single Image Display */
@@ -245,46 +236,35 @@ span {
 }
 
 /* 4-Image Grid Container (Mini Boxes) */
+/* 4-Image Grid Container Clean Fix */
 .multi-img-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    height: 270px;
+    height: 230px !important;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .mini-box {
-    width: 48%;
-    height: 46%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 48% !important;
+    height: 48% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
 }
 
 .mini-box img {
-    width: 100%;
-    height: 75px;
-    object-fit: cover;
+    width: 100% !important;
+    height: 80px !important;
+    object-fit: cover !important;
 }
 
 .mini-box span {
-    font-size: 0.75rem;
-    margin-top: 4px;
-    color: #0f1111;
-    text-align: left;
-    width: 100%;
-}
-
-/* Links inside card */
-.box-content p, .explore-link {
-    font-size: 0.85rem;
-    color: #007185;
-    margin-top: auto;
-    cursor: pointer;
-}
-
-.box-content p:hover, .explore-link:hover {
-    color: #c7511f;
-    text-decoration: underline;
+    font-size: 0.75rem !important;
+    margin-top: 2px !important;
+    color: #0f1111 !important;
+    line-height: 1.1 !important;
 }
 
 /* Recommendation Section */
@@ -332,4 +312,97 @@ span {
 .rec-box a:hover {
     text-decoration: underline;
     color: #c7511f;
+}
+
+/* Footer Styling */
+footer {
+    margin-top: 15px;
+}
+
+.foot-panel1 {
+    background-color: #37475a;
+    color: white;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.foot-panel1:hover {
+    background-color: #485769;
+}
+
+.foot-panel2 {
+    background-color: #232f3e;
+    color: white;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 40px 0px;
+}
+
+footer ul {
+    margin-top: 20px;
+}
+
+footer ul p {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+footer ul a {
+    display: block;
+    font-size: 0.85rem;
+    color: #dddddd;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+footer ul a:hover {
+    text-decoration: underline;
+}
+
+.foot-panel3 {
+    background-color: #232f3e;
+    color: white;
+    border-top: 0.5px solid #3a4553;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.foot-panel4 {
+    background-color: #0f1111;
+    color: white;
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 30px 0px;
+}
+
+.pages {
+    padding-bottom: 10px;
+}
+
+.pages a {
+    margin-right: 15px;
+}
+
+.copyright {
+    padding-top: 5px;
+}
+/* Direct Fix for Mini Images inside Boxes */
+.box .multi-img-container .mini-box img {
+    width: 100% !important;
+    height: 90px !important;
+    object-fit: cover !important;
+}
+
+.box .multi-img-container .mini-box {
+    width: 48% !important;
+    height: 48% !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
