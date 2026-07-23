@@ -238,17 +238,18 @@ span {
 /* 4-Image Grid Container (Mini Boxes) */
 /* 4-Image Grid Container Clean Fix */
 .multi-img-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 14px 12px;
     height: 230px !important;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
 .mini-box {
-    width: 48% !important;
-    height: 48% !important;
+    width: 100% !important;
+    height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
@@ -401,8 +402,8 @@ footer ul a:hover {
 }
 
 .box .multi-img-container .mini-box {
-    width: 48% !important;
-    height: 48% !important;
+    width: 100% !important;
+    height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
 }
