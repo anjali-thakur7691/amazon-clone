@@ -133,10 +133,11 @@ async function handleApi(request, response, url) {
 
   if (url.pathname === '/api/products' && method === 'GET') {
     const query = (url.searchParams.get('q') || '').trim().toLocaleLowerCase('en-IN');
+    const terms = query.split(/\s+/).filter(Boolean);
     const category = (url.searchParams.get('category') || '').trim().toLocaleLowerCase('en-IN');
     const filtered = products.filter(product => {
-      const productText = `${product.name} ${product.description} ${product.category} ${product.badge}`.toLocaleLowerCase('en-IN');
-      return (!query || productText.includes(query)) && (!category || product.category.toLocaleLowerCase('en-IN') === category);
+      const productText = `${product.id} ${product.slug} ${product.name} ${product.description} ${product.category} ${product.badge}`.toLocaleLowerCase('en-IN');
+      return terms.every(term => productText.includes(term)) && (!category || product.category.toLocaleLowerCase('en-IN') === category);
     });
     return sendJson(response, 200, { products: filtered, categories });
   }

@@ -8,6 +8,7 @@ const ordersDialog = document.querySelector('#orders-dialog');
 let products = [];
 let cart = { items: [], count: 0, subtotal: 0 };
 let toastTimer;
+let searchTimer;
 
 function getCartId() {
   try {
@@ -76,6 +77,10 @@ function productCard(product) {
 
 function renderProducts() {
   grid.replaceChildren();
+  const query = document.querySelector('#search-input').value.trim();
+  const category = document.querySelector('#search-category').value;
+  const countLabel = query ? `${products.length} result${products.length === 1 ? '' : 's'} for “${query}”` : category ? `${products.length} products in ${category}` : `Showing all ${products.length} products`;
+  document.querySelector('#results-count').textContent = countLabel;
   if (!products.length) {
     const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'No products found. Try another search or department.'; grid.append(empty); return;
   }
@@ -163,10 +168,21 @@ async function initialize() {
 
 document.querySelector('#search-form').addEventListener('submit', async event => {
   event.preventDefault();
+  clearTimeout(searchTimer);
   try { await searchProducts(); document.querySelector('#departments').scrollIntoView({ behavior: 'smooth' }); }
   catch (error) { showToast(error.message); }
 });
-document.querySelector('#search-category').addEventListener('change', () => document.querySelector('#search-form').requestSubmit());
+document.querySelector('#search-input').addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(async () => {
+    try { await searchProducts(); }
+    catch (error) { showToast(error.message); }
+  }, 250);
+});
+document.querySelector('#search-category').addEventListener('change', () => {
+  clearTimeout(searchTimer);
+  document.querySelector('#search-form').requestSubmit();
+});
 document.querySelector('#all-departments').addEventListener('click', () => { document.querySelector('#search-input').value = ''; document.querySelector('#search-category').value = ''; document.querySelector('#search-form').requestSubmit(); });
 document.querySelector('#sort-select').addEventListener('change', event => {
   const sort = event.target.value;

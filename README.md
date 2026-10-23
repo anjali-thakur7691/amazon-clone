@@ -11,7 +11,8 @@ A full-stack shopping storefront inspired by Amazon.in, made with **HTML, CSS, v
 ### Storefront
 - Responsive layout for desktop, tablet, and mobile
 - Amazon-inspired colors and shopping layout
-- Product catalog with prices, ratings, offers, and departments
+- Expanded sample catalog across shopping departments, with prices, ratings, and offers
+- Live search updates results as you type; multi-word search and department filters are supported
 - Server-side product search and department filtering
 - Sort products by price or customer rating
 
