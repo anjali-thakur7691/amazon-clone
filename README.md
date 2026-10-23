@@ -1,4 +1,6 @@
-﻿# Amazon.in Storefront Demo
+﻿![Amazon.in storefront project structure](project-structure.svg)
+
+# Amazon.in Storefront Demo
 
 A responsive storefront inspired by Amazon.in, built with **HTML, CSS, and vanilla JavaScript**. Browse sample departments, search the catalog, and try a persistent shopping cart.
 
@@ -71,3 +73,4 @@ For the first deployment, open the repository's **Settings → Pages** and set *
 - This is a static front-end demo. It has no server, database, authentication, inventory, or payment processing.
 - Sign-in and checkout only show demo messages; product names and prices are sample content.
 - Product photography, Google Fonts, and Font Awesome icons load from external services and may require an internet connection.
+
