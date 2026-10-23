@@ -1,11 +1,11 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-IN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#131921">
-  <meta name="description" content="A responsive Amazon.in inspired storefront demo. Browse departments, search offers and try the shopping cart.">
-  <title>Amazon.in | Online Shopping Demo</title>
+  <meta name="description" content="Browse a responsive Amazon-inspired shopping demo with a server-backed cart.">
+  <title>Amazon.in | Online Shopping</title>
   <link rel="icon" href="amazon_logo.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
@@ -15,65 +15,30 @@
   <header class="site-header" id="top">
     <div class="navbar">
       <a class="nav-logo border" href="#top" aria-label="Amazon.in home"><img src="amazon_logo.png" alt="Amazon"></a>
-      <button class="nav-address border" id="location-button" type="button" aria-label="Set delivery location">
-        <span class="muted">Delivering to India</span><strong><i class="fa-solid fa-location-dot"></i> Update location</strong>
-      </button>
+      <button class="nav-address border" id="location-button" type="button" aria-label="Set delivery location"><span class="muted">Delivering to India</span><strong><i class="fa-solid fa-location-dot"></i> Update location</strong></button>
       <form class="nav-search" id="search-form" role="search">
         <label class="visually-hidden" for="search-category">Search department</label>
-        <select class="search-select" id="search-category" aria-label="Search department"><option value="all">All</option><option>Home</option><option>Electronics</option><option>Fashion</option><option>Kitchen</option><option>Books</option></select>
+        <select class="search-select" id="search-category" aria-label="Search department"><option value="">All</option></select>
         <label class="visually-hidden" for="search-input">Search Amazon.in</label>
         <input id="search-input" class="search-input" type="search" placeholder="Search Amazon.in" autocomplete="off">
         <button class="search-icon" aria-label="Search" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
       </form>
       <button class="nav-account border" type="button" id="account-button"><span class="muted">Hello, sign in</span><strong>Account &amp; Lists <i class="fa-solid fa-caret-down"></i></strong></button>
-      <a class="nav-orders border" href="#recommendations"><span class="muted">Returns</span><strong>&amp; Orders</strong></a>
+      <button class="nav-orders border" type="button" id="orders-button"><span class="muted">Returns</span><strong>&amp; Orders</strong></button>
       <button class="nav-cart border" id="cart-button" type="button" aria-label="Open cart"><span class="cart-count" id="cart-count">0</span><i class="fa-solid fa-cart-shopping"></i><strong>Cart</strong></button>
     </div>
-    <nav class="panel" aria-label="Main navigation">
-      <a href="#departments" class="panel-all"><i class="fa-solid fa-bars"></i> All</a>
-      <div class="panel-ops"><a href="#deals">Today's Deals</a><a href="#electronics">Electronics</a><a href="#home">Home</a><a href="#fashion">Fashion</a><a href="#books">Books</a><a href="#recommendations">Customer Service</a></div>
-      <a class="panel-promo" href="#deals">Great deals for every day</a>
-    </nav>
+    <nav class="panel" aria-label="Main navigation"><button type="button" class="panel-all" id="all-departments"><i class="fa-solid fa-bars"></i> All</button><div class="panel-ops" id="department-links"></div><a class="panel-promo" href="#smart-watch">Shop deals of the day</a></nav>
   </header>
-
   <main>
-    <section class="hero-section" aria-label="Featured offers">
-      <div class="hero-copy"><p class="eyebrow">THE EVERYDAY SHOPPING EVENT</p><h1>Find a little more<br>of what you love.</h1><a class="hero-cta" href="#deals">Explore today's deals <i class="fa-solid fa-arrow-right"></i></a></div>
-      <div class="hero-msg">You are shopping on our demo storefront. <a href="#departments">Explore departments</a></div>
-    </section>
-
-    <section class="shop-section" id="departments" aria-label="Shop departments">
-      <article class="box product-card" id="home" data-category="Home" data-search="home appliances kitchen essentials cleaning offers">
-        <div class="box-content"><p class="card-kicker">MAKE YOUR SPACE YOURS</p><h2>Everyday home essentials</h2><div class="box-img" role="img" aria-label="Comfortable modern living room" style="--image:url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&amp;fit=crop&amp;w=800&amp;q=85')"></div><div class="card-bottom"><span class="price">From <strong>₹499</strong></span><button class="add-button" data-product="Home essentials" data-price="499">Add to cart</button></div></div>
-      </article>
-      <article class="box product-card" id="electronics" data-category="Electronics" data-search="electronics headphones audio gadgets wireless">
-        <div class="box-content"><p class="card-kicker">SOUND THAT MOVES YOU</p><h2>Headphones &amp; audio</h2><div class="box-img" role="img" aria-label="Wireless headphones" style="--image:url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&amp;fit=crop&amp;w=800&amp;q=85')"></div><div class="card-bottom"><span class="price">From <strong>₹1,299</strong></span><button class="add-button" data-product="Wireless headphones" data-price="1299">Add to cart</button></div></div>
-      </article>
-      <article class="box product-card" id="fashion" data-category="Fashion" data-search="fashion clothing style wardrobe accessories">
-        <div class="box-content"><p class="card-kicker">FRESH FINDS</p><h2>Styles for every day</h2><div class="box-img" role="img" aria-label="New season fashion" style="--image:url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&amp;fit=crop&amp;w=800&amp;q=85')"></div><div class="card-bottom"><span class="price">From <strong>₹799</strong></span><button class="add-button" data-product="Everyday fashion" data-price="799">Add to cart</button></div></div>
-      </article>
-      <article class="box product-card" id="kitchen" data-category="Kitchen" data-search="kitchen cookware cooking home utensils essentials">
-        <div class="box-content"><p class="card-kicker">COOK UP SOMETHING GOOD</p><h2>Kitchen favourites</h2><div class="box-img" role="img" aria-label="Cookware and kitchen tools" style="--image:url('https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&amp;fit=crop&amp;w=800&amp;q=85')"></div><div class="card-bottom"><span class="price">From <strong>₹349</strong></span><button class="add-button" data-product="Kitchen favourites" data-price="349">Add to cart</button></div></div>
-      </article>
-      <article class="box product-card" id="books" data-category="Books" data-search="books reading stories bestseller novels">
-        <div class="box-content"><p class="card-kicker">A GOOD STORY AWAITS</p><h2>Books worth a read</h2><div class="box-img" role="img" aria-label="Books on a shelf" style="--image:url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&amp;fit=crop&amp;w=800&amp;q=85')"></div><div class="card-bottom"><span class="price">From <strong>₹199</strong></span><button class="add-button" data-product="Books worth a read" data-price="199">Add to cart</button></div></div>
-      </article>
-      <article class="box product-card" id="deals" data-category="Electronics" data-search="electronics smartwatch technology fitness deals">
-        <div class="box-content"><p class="card-kicker">SMARTER EVERY DAY</p><h2>Tech for your routine</h2><div class="box-img" role="img" aria-label="Smart watch" style="--image:url('https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&amp;fit=crop&amp;w=800&amp;q=85')"></div><div class="card-bottom"><span class="price">From <strong>₹2,499</strong></span><button class="add-button" data-product="Smart watch" data-price="2499">Add to cart</button></div></div>
-      </article>
-      <article class="box feature-card"><div class="feature-inner"><p class="card-kicker">A BETTER DAY STARTS HERE</p><h2>Little upgrades.<br>Big difference.</h2><p>Thoughtful finds for home, work and everything in between.</p><a href="#recommendations">See what's popular <i class="fa-solid fa-arrow-right"></i></a></div></article>
-      <article class="box feature-card feature-warm"><div class="feature-inner"><p class="card-kicker">MADE FOR YOUR MOMENTS</p><h2>Discover your<br>next favourite.</h2><p>Explore fresh picks across the categories you love.</p><a href="#search-input">Start exploring <i class="fa-solid fa-arrow-right"></i></a></div></article>
-    </section>
-    <p class="empty-state" id="empty-state" hidden>No matching departments found. Try another search.</p>
-
-    <section class="recommendation-section" id="recommendations"><p class="card-kicker">YOUR NEXT DISCOVERY</p><h2>Make yourself at home.</h2><p>Sign in to see recommendations picked just for you.</p><button class="sign-in-btn" id="recommendation-signin" type="button">Sign in</button><small>New to the demo? <a href="#top" id="start-here">Start exploring</a></small></section>
+    <section class="hero-section" aria-label="Featured offers"><div class="hero-copy"><p class="eyebrow">GREAT FINDS. EVERY DAY.</p><h1>Shop your<br>everyday favourites.</h1><a class="hero-cta" href="#smart-watch">Explore today's deals <i class="fa-solid fa-arrow-right"></i></a></div><div class="hero-msg">You are viewing an Amazon.in inspired shopping demo. <a href="#departments">Browse all departments</a></div></section>
+    <section class="catalog-toolbar" id="departments"><div><p class="card-kicker">FIND SOMETHING YOU LOVE</p><h2>Shop by department</h2></div><label class="sort-control">Sort by <select id="sort-select"><option value="featured">Featured</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option><option value="rating">Customer Review</option></select></label></section>
+    <section class="shop-section" id="product-grid" aria-label="Products" aria-live="polite"><div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading productsâ€¦</div></section>
+    <section class="recommendation-section" id="recommendations"><p class="card-kicker">SHOP WITH CONFIDENCE</p><h2>Questions? We're here to help.</h2><p>This is a learning demo. Orders are saved by the local demo backend.</p><button class="sign-in-btn" id="recommendation-signin" type="button">About this demo</button></section>
   </main>
-  <footer>
-    <a class="foot-panel1" href="#top">Back to top <i class="fa-solid fa-arrow-up"></i></a>
-    <div class="foot-panel2"><div><h2>Get to Know Us</h2><a href="#recommendations">About this demo</a><a href="#departments">Departments</a><a href="#deals">Today's deals</a></div><div><h2>Shop with Us</h2><a href="#home">Home &amp; Kitchen</a><a href="#electronics">Electronics</a><a href="#fashion">Fashion</a></div><div><h2>Let Us Help You</h2><a href="#recommendations">Your Account</a><a href="#recommendations">Help &amp; Support</a><a href="#top">Back to home</a></div></div>
-    <div class="foot-bottom"><img src="amazon_logo.png" alt="Amazon"><p>Amazon.in inspired storefront demo · Built for learning</p><small>Product prices and shopping actions are for demonstration only.</small></div>
-  </footer>
-  <dialog class="cart-dialog" id="cart-dialog" aria-labelledby="cart-title"><div class="dialog-head"><h2 id="cart-title">Your cart <span id="cart-total-count">(0)</span></h2><button class="close-dialog" id="close-cart" aria-label="Close cart">×</button></div><div class="cart-items" id="cart-items"></div><div class="cart-footer"><p>Subtotal <strong id="cart-subtotal">₹0</strong></p><button class="checkout-button" id="checkout-button">Proceed to checkout</button></div></dialog>
+  <footer><a class="foot-panel1" href="#top">Back to top <i class="fa-solid fa-arrow-up"></i></a><div class="foot-panel2"><div><h2>Get to Know Us</h2><a href="#recommendations">About this demo</a><a href="#departments">Departments</a><a href="#smart-watch">Today's deals</a></div><div><h2>Shop with Us</h2><a href="#home">Home &amp; Kitchen</a><a href="#electronics">Electronics</a><a href="#fashion">Fashion</a></div><div><h2>Let Us Help You</h2><a href="#recommendations">Your Account</a><a href="#recommendations">Help &amp; Support</a><a href="#top">Back to home</a></div></div><div class="foot-bottom"><img src="amazon_logo.png" alt="Amazon"><p>Amazon.in inspired storefront Â· Built for learning</p><small>Demo products and checkout only. No real payments.</small></div></footer>
+  <dialog class="cart-dialog" id="cart-dialog" aria-labelledby="cart-title"><div class="dialog-head"><h2 id="cart-title">Your cart <span id="cart-total-count">(0)</span></h2><button class="close-dialog" id="close-cart" aria-label="Close cart">Ã—</button></div><div class="cart-items" id="cart-items"><p class="cart-empty">Loading cartâ€¦</p></div><div class="cart-footer"><p>Subtotal <strong id="cart-subtotal">â‚¹0</strong></p><button class="checkout-button" id="checkout-button">Proceed to checkout</button></div></dialog>
+  <dialog class="cart-dialog checkout-dialog" id="checkout-dialog" aria-labelledby="checkout-title"><div class="dialog-head"><h2 id="checkout-title">Delivery details</h2><button class="close-dialog" id="close-checkout" aria-label="Close checkout">Ã—</button></div><form id="checkout-form" class="checkout-form"><label>Full name<input name="name" required maxlength="100" autocomplete="name"></label><label>Email address<input name="email" type="email" required maxlength="254" autocomplete="email"></label><label>Mobile number<input name="phone" type="tel" required pattern="[0-9 +()-]{10,18}" autocomplete="tel"></label><label>Delivery address<textarea name="address" required maxlength="300" autocomplete="street-address" rows="3"></textarea></label><label>PIN code<input name="pincode" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6" autocomplete="postal-code"></label><button class="checkout-button" type="submit">Place demo order</button><small>No payment is collected. This creates a demo order only.</small></form></dialog>
+  <dialog class="cart-dialog orders-dialog" id="orders-dialog" aria-labelledby="orders-title"><div class="dialog-head"><h2 id="orders-title">Your demo orders</h2><button class="close-dialog" id="close-orders" aria-label="Close orders">Ã—</button></div><div class="cart-items" id="orders-list"></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

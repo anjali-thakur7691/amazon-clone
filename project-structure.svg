@@ -1,48 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="370" viewBox="0 0 1200 370" role="img" aria-labelledby="title description">
-  <title id="title">Amazon clone project structure</title>
-  <desc id="description">A folder tree showing the GitHub Pages workflow, HTML page, CSS, JavaScript, logo image, and README.</desc>
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="410" viewBox="0 0 1200 410" role="img" aria-labelledby="title description">
+  <title id="title">Amazon inspired full stack storefront project structure</title>
+  <desc id="description">Project tree showing the Node.js server, storefront frontend, product data, package scripts, and README.</desc>
   <defs>
-    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173d31"/><stop offset="1" stop-color="#102820"/></linearGradient>
-    <linearGradient id="folder" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6cf70"/><stop offset="1" stop-color="#e9ac40"/></linearGradient>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#263442"/><stop offset="1" stop-color="#111820"/></linearGradient>
+    <linearGradient id="folder" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd814"/><stop offset="1" stop-color="#f3a847"/></linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#06150f" flood-opacity=".2"/></filter>
   </defs>
-  <rect width="1200" height="370" rx="24" fill="url(#background)"/>
-  <circle cx="1070" cy="55" r="120" fill="#ffffff" opacity=".035"/>
-  <circle cx="1150" cy="340" r="155" fill="#ffffff" opacity=".035"/>
-  <text x="56" y="58" fill="#b7cbbd" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="3">PROJECT MAP</text>
-  <text x="56" y="99" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="700">Amazon.in Storefront Demo</text>
+  <rect width="1200" height="410" rx="24" fill="url(#background)"/>
+  <circle cx="1090" cy="55" r="130" fill="#fff" opacity=".035"/><circle cx="1160" cy="365" r="155" fill="#fff" opacity=".035"/>
+  <text x="52" y="55" fill="#c4d0d9" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="3">PROJECT MAP</text>
+  <text x="52" y="94" fill="#fff" font-family="Arial,sans-serif" font-size="27" font-weight="700">Amazon.in Storefront Demo</text>
   <g filter="url(#shadow)">
-    <rect x="55" y="133" width="290" height="184" rx="14" fill="#ffffff"/>
-    <rect x="55" y="133" width="290" height="48" rx="14" fill="#f2f4ed"/>
-    <path d="M55 167h290v14H55z" fill="#f2f4ed"/>
-    <path d="M77 151h12l5 5h18v15H77z" fill="url(#folder)"/>
-    <text x="123" y="164" fill="#1b3428" font-family="Arial, sans-serif" font-size="16" font-weight="700">amazon-clone/</text>
-    <path d="M91 181v117" stroke="#d5ddd4" stroke-width="2"/>
-    <path d="M91 204h18M91 231h18M91 258h18M91 285h18" stroke="#c3cec3" stroke-width="2"/>
-    <g font-family="Arial, sans-serif" font-size="13" fill="#405348">
-      <rect x="115" y="193" width="14" height="15" rx="2" fill="#d9e9fb"/><path d="M125 193v5h4" fill="none" stroke="#6f9fcf" stroke-width="1.5"/><text x="141" y="205">index.html</text>
-      <rect x="115" y="220" width="14" height="15" rx="2" fill="#d8eddf"/><path d="M118 225h8M118 229h8M118 233h5" stroke="#50a173" stroke-width="1.3"/><text x="141" y="232">style.css</text>
-      <rect x="115" y="247" width="14" height="15" rx="2" fill="#f8e6b9"/><text x="119" y="259" fill="#a87616" font-size="9" font-weight="700">JS</text><text x="141" y="259">script.js</text>
-      <rect x="115" y="274" width="14" height="15" rx="2" fill="#f5d9d1"/><circle cx="122" cy="281" r="3" fill="#bd775b"/><text x="141" y="286">amazon_logo.png</text>
+    <rect x="48" y="124" width="354" height="240" rx="13" fill="#fff"/><rect x="48" y="124" width="354" height="44" rx="13" fill="#f2f4f5"/><path d="M48 155h354v13H48z" fill="#f2f4f5"/>
+    <path d="M66 140h12l5 5h17v14H66z" fill="url(#folder)"/><text x="109" y="153" fill="#202a33" font-family="Arial,sans-serif" font-size="15" font-weight="700">amazon-clone/</text>
+    <path d="M81 171v167" stroke="#d6dce0" stroke-width="2"/><g stroke="#c3cbd0" stroke-width="2"><path d="M81 191h17M81 214h17M81 237h17M81 260h17M81 283h17M81 306h17M81 329h17"/></g>
+    <g font-family="Arial,sans-serif" font-size="12" fill="#3e4b55">
+      <rect x="101" y="181" width="13" height="13" rx="2" fill="#d9e9fb"/><text x="123" y="192">index.html</text>
+      <rect x="101" y="204" width="13" height="13" rx="2" fill="#d8eddf"/><text x="123" y="215">style.css</text>
+      <rect x="101" y="227" width="13" height="13" rx="2" fill="#f8e6b9"/><text x="105" y="237" fill="#a87616" font-size="8" font-weight="700">JS</text><text x="123" y="238">script.js</text>
+      <rect x="101" y="250" width="13" height="13" rx="2" fill="#e6dcf5"/><text x="123" y="261">server.js</text>
+      <path d="M101 273h13l3 3v11h-16z" fill="#f7dfba"/><text x="123" y="284">package.json</text>
+      <path d="M101 296h13l3 3v11h-16z" fill="#f7dfba"/><text x="123" y="307">data/products.json</text>
+      <rect x="101" y="319" width="13" height="13" rx="2" fill="#f5d9d1"/><text x="123" y="330">amazon_logo.png · README.md</text>
     </g>
   </g>
   <g filter="url(#shadow)">
-    <rect x="390" y="133" width="345" height="184" rx="14" fill="#ffffff"/>
-    <rect x="390" y="133" width="345" height="48" rx="14" fill="#f2f4ed"/>
-    <path d="M390 167h345v14H390z" fill="#f2f4ed"/>
-    <path d="M412 151h12l5 5h18v15h-35z" fill="url(#folder)"/>
-    <text x="458" y="164" fill="#1b3428" font-family="Arial, sans-serif" font-size="16" font-weight="700">.github/workflows/</text>
-    <path d="M428 181v76" stroke="#d5ddd4" stroke-width="2"/>
-    <path d="M428 208h18M428 239h18" stroke="#c3cec3" stroke-width="2"/>
-    <rect x="453" y="196" width="16" height="17" rx="3" fill="#e5dcf5"/><path d="M457 201h8M457 205h8M457 209h5" stroke="#8364b4" stroke-width="1.4"/><text x="482" y="209" fill="#405348" font-family="Arial, sans-serif" font-size="13">pages.yml</text>
-    <text x="453" y="244" fill="#66766c" font-family="Arial, sans-serif" font-size="11">Deploys the static site to GitHub Pages</text>
+    <rect x="426" y="124" width="326" height="240" rx="13" fill="#fff"/><rect x="426" y="124" width="326" height="44" rx="13" fill="#f2f4f5"/><path d="M426 155h326v13H426z" fill="#f2f4f5"/>
+    <path d="M445 140h12l5 5h17v14h-34z" fill="url(#folder)"/><text x="488" y="153" fill="#202a33" font-family="Arial,sans-serif" font-size="15" font-weight="700">data/</text>
+    <rect x="450" y="190" width="272" height="65" rx="8" fill="#f5f7f8"/><path d="M466 207h13l5 5v25h-18z" fill="#f7dfba"/><text x="495" y="215" fill="#34434d" font-family="Arial,sans-serif" font-size="12" font-weight="700">products.json</text><text x="495" y="234" fill="#6a777f" font-family="Arial,sans-serif" font-size="10">Sample catalog used by the API</text>
+    <rect x="450" y="268" width="272" height="65" rx="8" fill="#f5f7f8"/><ellipse cx="474" cy="288" rx="11" ry="5" fill="#a9c3d9"/><path d="M463 288v21c0 3 22 3 22 0v-21" fill="#d7e6f1" stroke="#8aaec8"/><ellipse cx="474" cy="309" rx="11" ry="5" fill="#c1d5e5"/><text x="495" y="293" fill="#34434d" font-family="Arial,sans-serif" font-size="12" font-weight="700">storefront.sqlite</text><text x="495" y="312" fill="#6a777f" font-family="Arial,sans-serif" font-size="10">Created on first server start</text>
   </g>
   <g filter="url(#shadow)">
-    <rect x="780" y="133" width="365" height="184" rx="14" fill="#ffffff"/>
-    <text x="808" y="169" fill="#1b3428" font-family="Arial, sans-serif" font-size="15" font-weight="700">How the pieces fit</text>
-    <circle cx="814" cy="204" r="5" fill="#6e9ecb"/><text x="831" y="209" fill="#53645a" font-family="Arial, sans-serif" font-size="12">HTML builds the storefront</text>
-    <circle cx="814" cy="235" r="5" fill="#5ca478"/><text x="831" y="240" fill="#53645a" font-family="Arial, sans-serif" font-size="12">CSS makes it responsive</text>
-    <circle cx="814" cy="266" r="5" fill="#d9ad49"/><text x="831" y="271" fill="#53645a" font-family="Arial, sans-serif" font-size="12">JavaScript powers search &amp; cart</text>
-    <circle cx="814" cy="297" r="5" fill="#987cc5"/><text x="831" y="302" fill="#53645a" font-family="Arial, sans-serif" font-size="12">GitHub Actions publishes the site</text>
+    <rect x="776" y="124" width="376" height="240" rx="13" fill="#fff"/><text x="801" y="157" fill="#202a33" font-family="Arial,sans-serif" font-size="15" font-weight="700">How the app works</text>
+    <circle cx="808" cy="194" r="5" fill="#f3a847"/><text x="825" y="198" fill="#53616a" font-family="Arial,sans-serif" font-size="11">HTML + CSS render the shop</text>
+    <circle cx="808" cy="227" r="5" fill="#6c9fc5"/><text x="825" y="231" fill="#53616a" font-family="Arial,sans-serif" font-size="11">JavaScript calls the REST API</text>
+    <circle cx="808" cy="260" r="5" fill="#5c9d76"/><text x="825" y="264" fill="#53616a" font-family="Arial,sans-serif" font-size="11">Node.js serves UI and catalog endpoints</text>
+    <circle cx="808" cy="293" r="5" fill="#9175bf"/><text x="825" y="297" fill="#53616a" font-family="Arial,sans-serif" font-size="11">SQLite stores carts and demo orders</text>
+    <path d="M801 320h326" stroke="#e2e6e8"/><text x="801" y="343" fill="#7b878e" font-family="Arial,sans-serif" font-size="10">One local command starts both frontend and backend.</text>
   </g>
 </svg>
