@@ -4,7 +4,7 @@
 
 A full-stack shopping storefront inspired by Amazon.in, made with **HTML, CSS, vanilla JavaScript, Node.js, and SQLite**. The interface uses Amazon's familiar navy navigation, orange search accent, yellow shopping buttons, and light gray catalog background.
 
-> **Learning demo:** This is an independent project, not an official Amazon product. It does not support real accounts, payments, shipping, or purchases.
+> **Learning demo:** This is an independent project, not an official Amazon product. It supports demo accounts and records demo orders; it does not process payments or ship purchases.
 
 ## Features
 
@@ -21,6 +21,8 @@ A full-stack shopping storefront inspired by Amazon.in, made with **HTML, CSS, v
 - SQLite persistence for carts and demo orders
 - Cart quantity and stock validation
 - Demo checkout with address validation and order history
+- Separate accounts with email and password sign-in, plus account-specific carts and order history
+- Passwords are stored as scrypt hashes; sign-in uses an HTTP-only session cookie
 - Same-origin API and static file serving; no frontend build or third-party server package required
 
 ## Getting started
@@ -55,18 +57,22 @@ The SQLite database is created automatically at `data/storefront.sqlite`. Set `D
 1. Search for a product or choose a department.
 2. Use **Add to cart** and the cart icon to review items and adjust quantities.
 3. Choose **Proceed to checkout**, enter demo delivery details, and place a demo order.
-4. Open **Returns & Orders** to view orders placed by this browser's cart.
+4. Create an account from **Account & Lists** or sign in. Orders placed while signed in appear in **Returns & Orders** for that account.
 
-The cart uses a random browser ID to reconnect to its server-side cart. Clearing browser storage creates a new cart ID; the old cart remains in the local database.
+Signed-in carts and order history follow the account across browsers. Signed-out guest carts and orders are stored against a random browser cart ID. Clearing browser storage creates a new guest cart ID; the old guest cart remains in the local database.
 
 ## API overview
 
-All API routes are served by the same Node.js process as the storefront. Cart and order routes use the `X-Cart-Id` request header.
+All API routes are served by the same Node.js process as the storefront. Guest cart requests use the `X-Cart-Id` request header; signed-in cart and order requests use the session cookie.
 
 | Method | Route | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/health` | Check server status |
 | `GET` | `/api/products?q=headphones&category=Electronics` | List and search catalog |
+| `POST` | `/api/auth/register` | Create `{ "name", "email", "password" }` account and sign in |
+| `POST` | `/api/auth/login` | Sign in with `{ "email", "password" }` |
+| `POST` | `/api/auth/logout` | End the current session |
+| `GET` | `/api/auth/me` | Read the signed-in account |
 | `GET` | `/api/cart` | Read cart and subtotal |
 | `POST` | `/api/cart/items` | Add `{ "productId": "elec-01" }` |
 | `PATCH` | `/api/cart/items/:productId` | Set `{ "quantity": 2 }`; zero removes item |
@@ -98,6 +104,6 @@ The app uses external Unsplash photos, Google Fonts, and Font Awesome icons; tho
 
 ## Demo limitations
 
-- Sign-in and payment processing are not implemented; checkout only records a demo order.
-- Cart IDs are browser identifiers, not user authentication. Do not use this demo for real personal information or production orders.
+- Payments, email verification, password reset, and shipping are not implemented; checkout only records a demo order.
+- This learning demo is not production account infrastructure. Do not use it for real personal information or production orders.
 - Stock values are sample limits and are not a real inventory system.

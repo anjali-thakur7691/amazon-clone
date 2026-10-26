@@ -9,6 +9,8 @@ let products = [];
 let cart = { items: [], count: 0, subtotal: 0 };
 let toastTimer;
 let searchTimer;
+let currentUser = null;
+let accountMode = 'login';
 
 function getCartId() {
   try {
@@ -197,6 +199,11 @@ document.querySelector('#close-cart').addEventListener('click', () => cartDialog
 cartDialog.addEventListener('click', event => { if (event.target === cartDialog) cartDialog.close(); });
 document.querySelector('#checkout-button').addEventListener('click', () => {
   if (!cart.count) { showToast('Your cart is empty'); return; }
+  if (currentUser) {
+    const form = document.querySelector('#checkout-form');
+    if (!form.elements.name.value) form.elements.name.value = currentUser.name;
+    if (!form.elements.email.value) form.elements.email.value = currentUser.email;
+  }
   cartDialog.close(); checkoutDialog.showModal();
 });
 document.querySelector('#close-checkout').addEventListener('click', () => checkoutDialog.close());
@@ -229,7 +236,43 @@ document.querySelector('#orders-button').addEventListener('click', async () => {
 });
 document.querySelector('#close-orders').addEventListener('click', () => ordersDialog.close());
 ordersDialog.addEventListener('click', event => { if (event.target === ordersDialog) ordersDialog.close(); });
-document.querySelector('#account-button').addEventListener('click', () => showToast('Account sign-in is not enabled in this demo'));
-document.querySelector('#recommendation-signin').addEventListener('click', () => showToast('Demo store: no real accounts or payments'));
+const accountDialog = document.querySelector('#account-dialog');
+const accountForm = document.querySelector('#account-form');
+function renderAccount() {
+  document.querySelector('#account-button').innerHTML = currentUser
+    ? `<span class="muted">Hello, ${escapeText(currentUser.name.split(' ')[0])}</span><strong>Account &amp; Lists <i class="fa-solid fa-caret-down"></i></strong>`
+    : '<span class="muted">Hello, sign in</span><strong>Account &amp; Lists <i class="fa-solid fa-caret-down"></i></strong>';
+  document.querySelector('#account-status').textContent = currentUser ? `Signed in as ${currentUser.email}. Your cart and orders are saved to this account.` : 'Sign in to keep your cart and order history with your account.';
+  document.querySelector('#account-form').hidden = Boolean(currentUser);
+  document.querySelector('#account-switch').hidden = Boolean(currentUser);
+  document.querySelector('#account-logout').hidden = !currentUser;
+  document.querySelector('#account-name-label').hidden = accountMode !== 'register' || Boolean(currentUser);
+  document.querySelector('#account-submit').textContent = accountMode === 'register' ? 'Create account' : 'Sign in';
+  document.querySelector('#account-title').textContent = currentUser ? 'Your account' : accountMode === 'register' ? 'Create account' : 'Sign in';
+  document.querySelector('#account-switch').textContent = accountMode === 'register' ? 'Already have an account? Sign in' : 'Create a new account';
+}
+function escapeText(value) { const span = document.createElement('span'); span.textContent = value; return span.innerHTML; }
+async function loadCurrentUser() { const result = await api('/api/auth/me'); currentUser = result.user; renderAccount(); }
+document.querySelector('#account-button').addEventListener('click', async () => { try { await loadCurrentUser(); accountDialog.showModal(); } catch (error) { showToast(error.message); } });
+document.querySelector('#close-account').addEventListener('click', () => accountDialog.close());
+accountDialog.addEventListener('click', event => { if (event.target === accountDialog) accountDialog.close(); });
+document.querySelector('#account-switch').addEventListener('click', () => { accountMode = accountMode === 'login' ? 'register' : 'login'; accountForm.reset(); renderAccount(); });
+accountForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = document.querySelector('#account-submit'); button.disabled = true;
+  try {
+    const payload = Object.fromEntries(new FormData(accountForm));
+    const result = await api(`/api/auth/${accountMode}`, { method: 'POST', body: JSON.stringify(payload) });
+    currentUser = result.user; accountForm.reset(); renderAccount(); accountDialog.close(); await refreshCart();
+    showToast(accountMode === 'register' ? 'Your account is ready' : 'Signed in successfully');
+  } catch (error) { showToast(error.message); }
+  finally { button.disabled = false; }
+});
+document.querySelector('#account-logout').addEventListener('click', async () => {
+  try { await api('/api/auth/logout', { method: 'POST', body: '{}' }); currentUser = null; renderAccount(); accountDialog.close(); await refreshCart(); showToast('Signed out'); }
+  catch (error) { showToast(error.message); }
+});
+document.querySelector('#recommendation-signin').addEventListener('click', async () => { try { await loadCurrentUser(); accountDialog.showModal(); } catch (error) { showToast(error.message); } });
 document.querySelector('#location-button').addEventListener('click', () => showToast('Delivery location: India'));
 initialize();
+loadCurrentUser().catch(() => {});

@@ -4,7 +4,10 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
+const { scrypt, randomBytes, timingSafeEqual, createHash } = require('node:crypto');
+const { promisify } = require('node:util');
 const { DatabaseSync } = require('node:sqlite');
+const scryptAsync = promisify(scrypt);
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT) || 3000;
@@ -24,6 +27,8 @@ db.exec(`
     quantity INTEGER NOT NULL CHECK (quantity > 0),
     PRIMARY KEY (cart_id, product_id)
   );
+  CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE COLLATE NOCASE, password_hash TEXT NOT NULL, created_at TEXT NOT NULL);
+  CREATE TABLE IF NOT EXISTS sessions (token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, expires_at TEXT NOT NULL);
   CREATE TABLE IF NOT EXISTS orders (
     id TEXT PRIMARY KEY,
     cart_id TEXT NOT NULL,
@@ -40,6 +45,7 @@ db.exec(`
     PRIMARY KEY (order_id, product_id)
   );
 `);
+try { db.exec('ALTER TABLE orders ADD COLUMN user_id TEXT REFERENCES users(id)'); } catch (error) { if (!String(error.message).includes('duplicate column')) throw error; }
 
 const staticFiles = new Map([
   ['/', ['index.html', 'text/html; charset=utf-8']],
@@ -68,6 +74,19 @@ function getCartId(request) {
   }
   return id;
 }
+
+function getSession(request) {
+  const token = (request.headers.cookie || '').split(';').map(part => part.trim()).find(part => part.startsWith('store_session='))?.slice('store_session='.length);
+  if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
+  const hash = createHash('sha256').update(token).digest('hex');
+  const row = db.prepare('SELECT users.id, users.name, users.email FROM sessions JOIN users ON users.id = sessions.user_id WHERE token_hash = ? AND expires_at > ?').get(hash, new Date().toISOString());
+  return row || null;
+}
+function cartKey(request) { const user = getSession(request); return user ? `user:${user.id}` : getCartId(request); }
+function setSessionCookie(response, token) { response.setHeader('Set-Cookie', `store_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000`); }
+function clearSessionCookie(response) { response.setHeader('Set-Cookie', 'store_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0'); }
+async function passwordHash(password, salt = randomBytes(16).toString('hex')) { return `${salt}:${(await scryptAsync(password, salt, 64)).toString('hex')}`; }
+async function verifyPassword(password, stored) { const [salt, expectedHex] = stored.split(':'); const expected = Buffer.from(expectedHex, 'hex'); const actual = Buffer.from(await passwordHash(password, salt).then(value => value.split(':')[1]), 'hex'); return expected.length === actual.length && timingSafeEqual(expected, actual); }
 
 function readJson(request) {
   return new Promise((resolve, reject) => {
@@ -131,6 +150,27 @@ async function handleApi(request, response, url) {
 
   if (url.pathname === '/api/health' && method === 'GET') return sendJson(response, 200, { status: 'ok' });
 
+  if (url.pathname === '/api/auth/me' && method === 'GET') return sendJson(response, 200, { user: getSession(request) });
+  if (url.pathname === '/api/auth/register' && method === 'POST') {
+    const body = await readJson(request); const name = String(body.name || '').trim(); const email = String(body.email || '').trim().toLowerCase(); const password = String(body.password || '');
+    if (name.length < 2 || name.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || password.length < 8 || password.length > 200) return sendJson(response, 400, { error: 'Name, valid email, and password (at least 8 characters) are required.' });
+    const id = randomUUID();
+    try { db.prepare('INSERT INTO users(id, name, email, password_hash, created_at) VALUES (?, ?, ?, ?, ?)').run(id, name, email, await passwordHash(password), new Date().toISOString()); }
+    catch (error) { if (String(error.message).includes('UNIQUE')) return sendJson(response, 409, { error: 'An account with this email already exists. Sign in instead.' }); throw error; }
+    const token = randomBytes(32).toString('hex'); db.prepare('INSERT INTO sessions(token_hash, user_id, expires_at) VALUES (?, ?, ?)').run(createHash('sha256').update(token).digest('hex'), id, new Date(Date.now() + 30 * 86400000).toISOString());
+    setSessionCookie(response, token); return sendJson(response, 201, { user: { id, name, email } });
+  }
+  if (url.pathname === '/api/auth/login' && method === 'POST') {
+    const body = await readJson(request); const email = String(body.email || '').trim().toLowerCase(); const user = db.prepare('SELECT id, name, email, password_hash FROM users WHERE email = ?').get(email);
+    if (!user || !(await verifyPassword(String(body.password || ''), user.password_hash))) return sendJson(response, 401, { error: 'Email or password is incorrect.' });
+    const token = randomBytes(32).toString('hex'); db.prepare('INSERT INTO sessions(token_hash, user_id, expires_at) VALUES (?, ?, ?)').run(createHash('sha256').update(token).digest('hex'), user.id, new Date(Date.now() + 30 * 86400000).toISOString());
+    setSessionCookie(response, token); return sendJson(response, 200, { user: { id: user.id, name: user.name, email: user.email } });
+  }
+  if (url.pathname === '/api/auth/logout' && method === 'POST') {
+    const user = getSession(request); if (user) { const token = (request.headers.cookie || '').split(';').map(part => part.trim()).find(part => part.startsWith('store_session='))?.slice('store_session='.length); if (token) db.prepare('DELETE FROM sessions WHERE token_hash = ?').run(createHash('sha256').update(token).digest('hex')); }
+    clearSessionCookie(response); return sendJson(response, 200, { user: null });
+  }
+
   if (url.pathname === '/api/products' && method === 'GET') {
     const query = (url.searchParams.get('q') || '').trim().toLocaleLowerCase('en-IN');
     const terms = query.split(/\s+/).filter(Boolean);
@@ -143,11 +183,11 @@ async function handleApi(request, response, url) {
   }
 
   if (url.pathname === '/api/cart' && method === 'GET') {
-    return sendJson(response, 200, { cart: cartFor(getCartId(request)) });
+    return sendJson(response, 200, { cart: cartFor(cartKey(request)) });
   }
 
   if (url.pathname === '/api/cart/items' && method === 'POST') {
-    const cartId = getCartId(request);
+    const cartId = cartKey(request);
     const body = await readJson(request);
     const product = productsById.get(String(body.productId || ''));
     if (!product) return sendJson(response, 404, { error: 'Product not found.' });
@@ -160,7 +200,7 @@ async function handleApi(request, response, url) {
 
   const cartItemMatch = url.pathname.match(/^\/api\/cart\/items\/([^/]+)$/);
   if (cartItemMatch && method === 'PATCH') {
-    const cartId = getCartId(request);
+    const cartId = cartKey(request);
     const productId = decodeURIComponent(cartItemMatch[1]);
     const body = await readJson(request);
     const quantity = Number(body.quantity);
@@ -174,13 +214,13 @@ async function handleApi(request, response, url) {
   }
 
   if (url.pathname === '/api/orders' && method === 'GET') {
-    const cartId = getCartId(request);
-    const rows = db.prepare('SELECT id FROM orders WHERE cart_id = ? ORDER BY created_at DESC').all(cartId);
+    const user = getSession(request); const cartId = cartKey(request);
+    const rows = user ? db.prepare('SELECT id FROM orders WHERE user_id = ? ORDER BY created_at DESC').all(user.id) : db.prepare('SELECT id FROM orders WHERE cart_id = ? AND user_id IS NULL ORDER BY created_at DESC').all(cartId);
     return sendJson(response, 200, { orders: rows.map(row => orderFor(row.id)) });
   }
 
   if (url.pathname === '/api/orders' && method === 'POST') {
-    const cartId = getCartId(request);
+    const user = getSession(request); const cartId = cartKey(request);
     const body = await readJson(request);
     const customer = validateCustomer(body.customer);
     const cart = cartFor(cartId);
@@ -189,7 +229,7 @@ async function handleApi(request, response, url) {
     const createdAt = new Date().toISOString();
     db.exec('BEGIN IMMEDIATE');
     try {
-      db.prepare('INSERT INTO orders(id, cart_id, customer_json, total, created_at) VALUES (?, ?, ?, ?, ?)').run(id, cartId, JSON.stringify(customer), cart.subtotal, createdAt);
+      db.prepare('INSERT INTO orders(id, cart_id, customer_json, total, created_at, user_id) VALUES (?, ?, ?, ?, ?, ?)').run(id, cartId, JSON.stringify(customer), cart.subtotal, createdAt, user?.id || null);
       const addItem = db.prepare('INSERT INTO order_items(order_id, product_id, name, unit_price, quantity) VALUES (?, ?, ?, ?, ?)');
       for (const item of cart.items) addItem.run(id, item.id, item.name, item.price, item.quantity);
       db.prepare('DELETE FROM carts WHERE cart_id = ?').run(cartId);
@@ -203,9 +243,9 @@ async function handleApi(request, response, url) {
 
   const orderMatch = url.pathname.match(/^\/api\/orders\/([^/]+)$/);
   if (orderMatch && method === 'GET') {
-    const cartId = getCartId(request);
+    const user = getSession(request); const cartId = cartKey(request);
     const orderId = decodeURIComponent(orderMatch[1]);
-    const belongsToCart = db.prepare('SELECT 1 AS found FROM orders WHERE id = ? AND cart_id = ?').get(orderId, cartId);
+    const belongsToCart = user ? db.prepare('SELECT 1 AS found FROM orders WHERE id = ? AND user_id = ?').get(orderId, user.id) : db.prepare('SELECT 1 AS found FROM orders WHERE id = ? AND cart_id = ? AND user_id IS NULL').get(orderId, cartId);
     const order = belongsToCart ? orderFor(orderId) : null;
     return order ? sendJson(response, 200, { order }) : sendJson(response, 404, { error: 'Order not found.' });
   }
